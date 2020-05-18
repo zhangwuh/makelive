@@ -56,7 +56,7 @@ func TestMergeSort_Sort(t *testing.T) {
 func TestPop(t *testing.T) {
 	input := &queue{[]int{3, 2, 1, 10, 20, 5, 1, 0}}
 	for !input.isEmpty() {
-		fmt.Println(input.first())
+		fmt.Println(input.peek())
 	}
 }
 

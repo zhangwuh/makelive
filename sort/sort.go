@@ -115,15 +115,15 @@ func (q *queue) isEmpty() bool {
 	return len(q.data) == 0
 }
 
-func (q *queue) first() int {
+func (q *queue) peek() int {
 	return q.data[0]
 }
 
-func (q *queue) pop() int {
+func (q *queue) take() int {
 	defer func() {
 		q.data = q.data[1:]
 	}()
-	return q.first()
+	return q.peek()
 }
 
 func (q *queue) append(d int) {
@@ -136,14 +136,14 @@ func (ss *MergeSort) merge(lo []int, ro []int) (out []int) {
 
 	for !lq.isEmpty() || !rq.isEmpty() {
 		if lq.isEmpty() {
-			out = append(out, rq.pop())
+			out = append(out, rq.take())
 		} else if rq.isEmpty() {
-			out = append(out, lq.pop())
+			out = append(out, lq.take())
 		} else {
-			if lq.first() < rq.first() {
-				out = append(out, lq.pop())
+			if lq.peek() < rq.peek() {
+				out = append(out, lq.take())
 			} else {
-				out = append(out, rq.pop())
+				out = append(out, rq.take())
 			}
 		}
 	}
@@ -183,7 +183,7 @@ func (qs *QuickSort) Sort(input []int) []int {
 			break
 		}
 		qs.count++
-		v := slq.pop()
+		v := slq.take()
 		if v >= pv {
 			or = append(or, v)
 		} else {
@@ -195,7 +195,7 @@ func (qs *QuickSort) Sort(input []int) []int {
 			break
 		}
 		qs.count++
-		v := srq.pop()
+		v := srq.take()
 		if v >= pv {
 			or = append(or, v)
 		} else {
