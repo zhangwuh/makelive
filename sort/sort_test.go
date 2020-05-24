@@ -70,3 +70,9 @@ func TestQuickSort_Sort(t *testing.T) {
 	fmt.Println(st.Sort(input))
 	fmt.Println(st.count)
 }
+
+func TestHillSort_Sort(t *testing.T) {
+	input := []int{3, 2, 1, 10, 20, 5, 1, 9}
+	st := &HillSort{}
+	fmt.Println(st.Sort(input))
+}

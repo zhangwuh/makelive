@@ -205,3 +205,18 @@ func (qs *QuickSort) Sort(input []int) []int {
 
 	return append(append(qs.Sort(ol), pv), qs.Sort(or)...)
 }
+
+type HillSort struct{}
+
+func (qs *HillSort) Sort(input []int) []int {
+	for step := len(input) / 2; step > 0; step = step / 2 {
+		for i := 0; i < len(input)/step; i++ {
+			for j := i; j+step < len(input); j += step {
+				if input[j] > input[j+step] {
+					input[j], input[j+step] = input[j+step], input[j]
+				}
+			}
+		}
+	}
+	return input
+}
