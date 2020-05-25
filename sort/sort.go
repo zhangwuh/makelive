@@ -167,9 +167,8 @@ func (qs *QuickSort) Sort(input []int) []int {
 	if len(input) <= 1 {
 		return input
 	}
-	s := rand.NewSource(time.Now().UnixNano())
-	r := rand.New(s)
-	pivot := r.Intn(len(input))
+
+	pivot := pivot(len(input))
 
 	pv := input[pivot]
 	lq := input[:pivot]
@@ -206,6 +205,11 @@ func (qs *QuickSort) Sort(input []int) []int {
 	return append(append(qs.Sort(ol), pv), qs.Sort(or)...)
 }
 
+func pivot(len int) int {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	return r.Intn(len)
+}
+
 type HillSort struct{}
 
 func (qs *HillSort) Sort(input []int) []int {
@@ -219,4 +223,45 @@ func (qs *HillSort) Sort(input []int) []int {
 		}
 	}
 	return input
+}
+
+type Comparable interface {
+	Gte(to Comparable) bool
+}
+
+type NewQuickSort struct {
+	Desc bool
+}
+
+func (qs *NewQuickSort) Sort(input []Comparable) {
+	if len(input) <= 1 {
+		return
+	}
+	pivot := pivot(len(input))
+	qs.doSort(input, pivot)
+}
+
+func (qs *NewQuickSort) swap(input []Comparable, i int, j int) {
+	input[i], input[j] = input[j], input[i]
+}
+
+func (qs *NewQuickSort) doSort(input []Comparable, pivot int) {
+	pv := input[pivot]
+	qs.swap(input, pivot, 0)
+	flag := 0
+	for i := 1; i < len(input); i++ {
+		compare := !input[i].Gte(pv)
+		if qs.Desc {
+			compare = !compare
+		}
+		if compare {
+			flag++
+			qs.swap(input, i, flag)
+		}
+	}
+	qs.swap(input, 0, flag)
+	left := input[:flag]
+	right := input[flag+1:]
+	qs.Sort(left)
+	qs.Sort(right)
 }

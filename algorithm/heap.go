@@ -21,12 +21,13 @@ type IndexPQ interface {
 type IndexMinPQ struct {
 	pq     []int
 	source []int
+	less   func(i, j int) bool
 }
 
 func (q *IndexMinPQ) swim(i int) {
 	for i/2 > 0 {
 		parent := i / 2
-		if q.value(i) < q.value(parent) {
+		if q.less(q.value(i), q.value(parent)) {
 			q.swap(i, parent)
 			i = parent
 		} else {
@@ -47,7 +48,7 @@ func (q *IndexMinPQ) value(i int) int {
 }
 
 func (q *IndexMinPQ) min(i, j int) int {
-	if q.value(i) <= q.value(j) {
+	if q.less(q.value(i), q.value(j)) || q.value(i) == q.value(j) {
 		return i
 	}
 	return j
@@ -78,6 +79,9 @@ func (q *IndexMinPQ) swap(i, j int) {
 func NewIndexMinPQ(source []int) *IndexMinPQ {
 	pq := &IndexMinPQ{
 		pq: []int{0},
+		less: func(i, j int) bool {
+			return i < j
+		},
 	}
 	for i, v := range source {
 		pq.Insert(i, v)
@@ -98,12 +102,12 @@ func (pq *IndexMinPQ) Insert(i, val int) {
 	pq.swim(index)
 }
 
-func (pq *IndexMinPQ) Min() int {
+func (pq *IndexMinPQ) Root() int {
 	return pq.value(1)
 }
 
-func (pq *IndexMinPQ) DelMin() int {
-	min := pq.Min()
+func (pq *IndexMinPQ) DelRoot() int {
+	min := pq.Root()
 	pq.swap(1, len(pq.pq)-1)
 	pq.pq = pq.pq[0 : len(pq.pq)-1]
 	pq.sink(1)

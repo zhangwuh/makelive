@@ -1,4 +1,4 @@
-// heap_test.go  * Created on  2020/5/24
+// load_balance_test.go  * Created on  2020/5/26
 // Copyright (c) 2020 YueTu
 // YueTu TECHNOLOGY CO.,LTD. All Rights Reserved.
 //
@@ -10,20 +10,16 @@
 
 package algorithm
 
-import (
-	"fmt"
-	"testing"
-)
+import "testing"
 
-func TestNewIndexMinPQ(t *testing.T) {
-	q := NewIndexMinPQ([]int{5, 9, 10, 2, 6, 1, 0})
-	q.Insert(7, 5)
-	q.Insert(8, 11)
-	q.Print()
-	fmt.Println("---------------")
-	q.DelRoot()
-	q.Print()
-	fmt.Println("---------------")
-	q.DelRoot()
-	q.Print()
+func TestBalancer_Take(t *testing.T) {
+	balancer := NewBalancer(3)
+	tasks := []*task{
+		{"a", 10},
+		{"b", 5},
+		{"c", 20},
+		{"d", 15},
+		{"e", 11},
+	}
+	balancer.Take(tasks)
 }

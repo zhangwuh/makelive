@@ -76,3 +76,21 @@ func TestHillSort_Sort(t *testing.T) {
 	st := &HillSort{}
 	fmt.Println(st.Sort(input))
 }
+
+type stringCompare string
+
+func (sc stringCompare) Gte(to Comparable) bool {
+	return string(sc) >= string(to.(stringCompare))
+}
+
+func TestNewQuickSort_Sort(t *testing.T) {
+	qs := &NewQuickSort{Desc: true}
+	var input []Comparable
+	for _, v := range []stringCompare{"B", "C", "A", "G", "F", "E"} {
+		input = append(input, v)
+	}
+	qs.Sort(input)
+	for _, v := range input {
+		println(string(v.(stringCompare)))
+	}
+}
