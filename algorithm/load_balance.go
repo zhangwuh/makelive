@@ -12,6 +12,7 @@ package algorithm
 
 import (
 	"fmt"
+	"strconv"
 
 	"mklive.zhangwuh.com/sort"
 )
@@ -34,7 +35,7 @@ func NewBalancer(size int) *balancer {
 	b := &balancer{size: size}
 	size++
 	for size > 0 {
-		b.workers = append(b.workers, &worker{})
+		b.workers = append(b.workers, &worker{name: strconv.Itoa(size)})
 		size--
 	}
 	return b
@@ -48,6 +49,7 @@ func (balancer *balancer) insert(worker *worker) {
 
 type worker struct {
 	workload int
+	name     string
 }
 
 func (balancer *balancer) Take(tasks []*task) {
@@ -64,7 +66,7 @@ func (balancer *balancer) Take(tasks []*task) {
 		worker := balancer.pop()
 		worker.workload += tt.timeConsume
 		balancer.insert(worker)
-		fmt.Println(fmt.Sprintf("task %s %d assigned to worker with load %d", tt.name, tt.timeConsume, worker.workload))
+		fmt.Println(fmt.Sprintf("task %s %d assigned to worker with load %s %d", tt.name, tt.timeConsume, worker.name, worker.workload))
 	}
 }
 
