@@ -226,7 +226,7 @@ func (qs *HillSort) Sort(input []int) []int {
 }
 
 type Comparable interface {
-	Gte(to Comparable) bool
+	Compare(to Comparable) int
 }
 
 type NewQuickSort struct {
@@ -250,11 +250,11 @@ func (qs *NewQuickSort) doSort(input []Comparable, pivot int) {
 	qs.swap(input, pivot, 0)
 	flag := 0
 	for i := 1; i < len(input); i++ {
-		compare := !input[i].Gte(pv)
+		compare := input[i].Compare(pv)
 		if qs.Desc {
-			compare = !compare
+			compare = -compare
 		}
-		if compare {
+		if compare <= 0 {
 			flag++
 			qs.swap(input, i, flag)
 		}

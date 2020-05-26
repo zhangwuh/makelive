@@ -22,8 +22,14 @@ type task struct {
 	timeConsume int
 }
 
-func (t *task) Gte(to sort.Comparable) bool {
-	return t.timeConsume >= to.(*task).timeConsume
+func (t *task) Compare(to sort.Comparable) int {
+	if t.timeConsume == to.(*task).timeConsume {
+		return 0
+	}
+	if t.timeConsume > to.(*task).timeConsume {
+		return 1
+	}
+	return -1
 }
 
 type balancer struct {

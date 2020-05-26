@@ -79,8 +79,14 @@ func TestHillSort_Sort(t *testing.T) {
 
 type stringCompare string
 
-func (sc stringCompare) Gte(to Comparable) bool {
-	return string(sc) >= string(to.(stringCompare))
+func (sc stringCompare) Compare(to Comparable) int {
+	if string(sc) == string(to.(stringCompare)) {
+		return 0
+	}
+	if string(sc) >= string(to.(stringCompare)) {
+		return 1
+	}
+	return 1
 }
 
 func TestNewQuickSort_Sort(t *testing.T) {
