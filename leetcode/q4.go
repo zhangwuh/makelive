@@ -10,13 +10,13 @@
 
 package leetcode
 
-func findMedian(n1 []int, n2 []int) float64 {
+func findMedianSortedArrays(n1 []int, n2 []int) float64 {
 	merged := merge(n1, n2)
 	if len(merged)%2 == 1 {
 		return float64(merged[len(merged)/2])
 	}
 	middle := len(merged)/2 - 1
-	return float64(merged[middle]+merged[middle]+1) / 2
+	return float64(merged[middle]+merged[middle+1]) / 2
 }
 
 //O(m+n)
