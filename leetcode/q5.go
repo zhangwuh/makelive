@@ -8,7 +8,7 @@
 // it only in accordance with the terms of the license agreement you
 // entered into with YueTu Ltd.
 
-package algorithm
+package leetcode
 
 //给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。
 

@@ -8,7 +8,7 @@
 // it only in accordance with the terms of the license agreement you
 // entered into with YueTu Ltd.
 
-package algorithm
+package leetcode
 
 const (
 	ceil  = 214748364
