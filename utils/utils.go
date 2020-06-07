@@ -8,7 +8,12 @@
 // it only in accordance with the terms of the license agreement you
 // entered into with YueTu Ltd.
 
-package leetcode
+package utils
+
+import (
+	"math/rand"
+	"time"
+)
 
 type DeQue interface {
 	Add(e interface{})
@@ -97,6 +102,11 @@ type NumberSorter struct {
 	Desc bool
 }
 
+func pivot(len int) int {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	return r.Intn(len)
+}
+
 func (qs *NumberSorter) Sort(input []int) {
 	if len(input) <= 1 {
 		return
@@ -128,4 +138,13 @@ func (qs *NumberSorter) doSort(input []int, pivot int) {
 	right := input[flag+1:]
 	qs.Sort(left)
 	qs.Sort(right)
+}
+
+func ContainsInt(slice []int, n int) bool {
+	for _, v := range slice {
+		if v == n {
+			return true
+		}
+	}
+	return false
 }

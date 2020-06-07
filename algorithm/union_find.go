@@ -83,16 +83,16 @@ func (uf *forestUnionFind) union(p, q int) {
 	uf.count--
 }
 
-func (uf *forestUnionFind) find(p int) int {
+func (uf *forestUnionFind) find(p int) (root int) {
 	id := uf.points[p]
 	if id == p { //root
 		return p
 	}
-	root := uf.find(id) //flat all the nodes to root
 	defer func() {
 		uf.points[p] = root
 	}()
-	return root
+	root = uf.find(id) //flat all the nodes to root
+	return
 }
 
 func (uf *forestUnionFind) connected(p, q int) bool {
