@@ -18,16 +18,16 @@ type Stack interface {
 	IsEmpty() bool
 }
 
-type deque struct {
+type Deque struct {
 	stack
 	stackMode bool
 }
 
-func (dq *deque) inverse() {
+func (dq *Deque) inverse() {
 	dq.stackMode = !dq.stackMode
 }
 
-func (dq *deque) next() interface{} {
+func (dq *Deque) next() interface{} {
 	if dq.IsEmpty() {
 		return nil
 	}
@@ -37,7 +37,7 @@ func (dq *deque) next() interface{} {
 	return dq.Offer()
 }
 
-func (dq *deque) putback(e interface{}) {
+func (dq *Deque) putback(e interface{}) {
 	if dq.stackMode {
 		dq.Push(e)
 	} else {
@@ -45,14 +45,14 @@ func (dq *deque) putback(e interface{}) {
 	}
 }
 
-func (dq *deque) Add(e interface{}) {
+func (dq *Deque) Add(e interface{}) {
 	var newarr []interface{}
 	newarr = append(newarr, e)
 	newarr = append(newarr, dq.arr...)
 	dq.arr = newarr
 }
 
-func (dq *deque) Offer() interface{} {
+func (dq *Deque) Offer() interface{} {
 	if dq == nil || dq.stack.IsEmpty() {
 		return nil
 	}
