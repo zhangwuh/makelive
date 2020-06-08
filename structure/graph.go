@@ -17,14 +17,14 @@ import (
 )
 
 type Graph interface {
-	V() int             //vertex amount
-	E() int             //edge amount
-	AddEdge(v1, v2 int) //add edge between v1 and v2
-	Adj(v int) []int    // all vertex connected to v
+	V() int                          //vertex amount
+	E() int                          //edge amount
+	AddEdge(v1, v2 interface{})      //add edge between v1 and v2
+	Adj(v interface{}) []interface{} // all vertex connected to v
 }
 
 type adjNode struct {
-	edges []int
+	edges []interface{}
 }
 
 // adjacency-lists based graph
@@ -57,6 +57,11 @@ func newAdjNodes(v int) []*adjNode {
 	return nodes
 }
 
+func (g *AdjGraph) AddV() {
+	g.vertex++
+	g.adjList = append(g.adjList, &adjNode{})
+}
+
 func (g *AdjGraph) V() int {
 	return g.vertex
 }
@@ -65,19 +70,19 @@ func (g *AdjGraph) E() int {
 	return g.edge
 }
 
-func (g *AdjGraph) Adj(v int) []int {
-	return g.adjList[v].edges
+func (g *AdjGraph) Adj(v interface{}) []interface{} {
+	return g.adjList[v.(int)].edges
 }
 
-func (g *AdjGraph) AddEdge(v, w int) {
-	if v >= g.V() || w >= g.vertex {
+func (g *AdjGraph) AddEdge(v, w interface{}) {
+	if v.(int) >= g.V() || w.(int) >= g.V() {
 		return
 	}
 	defer func() {
 		g.edge++
 	}()
-	g.adjList[v].edges = append(g.adjList[v].edges, w)
-	g.adjList[w].edges = append(g.adjList[w].edges, v)
+	g.adjList[v.(int)].edges = append(g.adjList[v.(int)].edges, w.(int))
+	g.adjList[w.(int)].edges = append(g.adjList[w.(int)].edges, v.(int))
 }
 
 type GraphResolver struct {
@@ -153,7 +158,7 @@ func newUfSearcher(g Graph) *ufSearcher {
 	}
 	for v := 0; v < g.V(); v++ {
 		for _, j := range g.Adj(v) {
-			us.union(v, j)
+			us.union(v, j.(int))
 		}
 	}
 	return us
@@ -231,15 +236,15 @@ func newDfsSearcher(g Graph) *dfsSearcher {
 func (u *dfsSearcher) dfs(marked *[]int, edgeTo *[]int, w int, parent int) {
 	*marked = append(*marked, w)
 	for _, n := range u.g.Adj(w) {
-		if !utils.ContainsInt(*marked, n) {
-			(*edgeTo)[n] = w
-			u.isBlack[n] = !u.isBlack[w]
-			u.dfs(marked, edgeTo, n, w)
+		if !utils.ContainsInt(*marked, n.(int)) {
+			(*edgeTo)[n.(int)] = w
+			u.isBlack[n.(int)] = !u.isBlack[w]
+			u.dfs(marked, edgeTo, n.(int), w)
 		} else {
 			if n != parent {
 				u.hasCycle = true
 			}
-			if !u.isBlack[n] == u.isBlack[w] {
+			if !u.isBlack[n.(int)] == u.isBlack[w] {
 				u.twoColor = false
 			}
 		}
@@ -309,9 +314,9 @@ func (u *bfsSearcher) bfs(marked *[]int, edgeTo *[]int, v int) {
 		}
 		w := val.(int)
 		for _, n := range u.g.Adj(w) {
-			if !utils.ContainsInt(*marked, n) {
-				(*edgeTo)[n] = w
-				*marked = append(*marked, n)
+			if !utils.ContainsInt(*marked, n.(int)) {
+				(*edgeTo)[n.(int)] = w
+				*marked = append(*marked, n.(int))
 				q.Enqueue(n)
 			}
 		}

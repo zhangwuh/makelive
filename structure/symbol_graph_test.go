@@ -1,4 +1,4 @@
-// stack_test.go  * Created on  2020/5/14
+// symbol_graph_test.go  * Created on  2020/6/7
 // Copyright (c) 2020 YueTu
 // YueTu TECHNOLOGY CO.,LTD. All Rights Reserved.
 //
@@ -16,15 +16,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLinkedStack(t *testing.T) {
-	stack := NewLinkedStack(&node{Value: "1"})
-
-	stack.Push("2")
-	stack.Push("3")
-
-	assert.Equal(t, stack.Pop(), "3")
-	assert.Equal(t, stack.Pop(), "2")
-	assert.Equal(t, stack.Pop(), "1")
-	assert.True(t, stack.IsEmpty())
-	assert.Nil(t, stack.Pop())
+func TestSymbolGraph(t *testing.T) {
+	sg := NewSymbolGraph([]string{
+		"BJS NYC", "CTU BJS", "BKK NYC",
+	})
+	assert.Equal(t, len(sg.Adj("BJS")), 2)
+	assert.Equal(t, len(sg.Adj("BKK")), 1)
 }
