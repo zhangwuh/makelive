@@ -24,6 +24,8 @@ type AdjGraph struct {
 	adjList []*adjNode
 }
 
+type vertex struct{}
+
 type edge struct {
 	v, w int
 }
@@ -45,11 +47,6 @@ func newAdjNodes(v int) []*adjNode {
 		nodes = append(nodes, &adjNode{})
 	}
 	return nodes
-}
-
-func (g *AdjGraph) AddV() {
-	g.vertex++
-	g.adjList = append(g.adjList, &adjNode{})
 }
 
 func (g *AdjGraph) V() int {
@@ -120,10 +117,10 @@ func (u *GraphResolver) NumberOfSelfLoops(g Graph) int {
 	return amount / 2
 }
 
-func (u *GraphResolver) Desc(g Graph) string {
-	desc := fmt.Sprintf("vertex:%d edge:%d\n", g.V(), g.E())
-	for i := 0; i < g.V(); i++ {
-		desc += fmt.Sprintf("v connected to:%v\n", g.Adj(i))
+func (u *GraphResolver) Desc() string {
+	desc := fmt.Sprintf("vertex:%d edge:%d\n", u.g.V(), u.g.E())
+	for i := 0; i < u.g.V(); i++ {
+		desc += fmt.Sprintf("%d connected to:%v\n", i, u.g.Adj(i))
 	}
 	return desc
 }
