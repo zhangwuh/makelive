@@ -1,13 +1,3 @@
-// q9.go  * Created on  2020/6/3
-// Copyright (c) 2020 YueTu
-// YueTu TECHNOLOGY CO.,LTD. All Rights Reserved.
-//
-// This software is the confidential and proprietary information of
-// YueTu Ltd. ("Confidential Information").
-// You shall not disclose such Confidential Information and shall use
-// it only in accordance with the terms of the license agreement you
-// entered into with YueTu Ltd.
-
 package leetcode
 
 //判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。

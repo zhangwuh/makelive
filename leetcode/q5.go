@@ -1,13 +1,3 @@
-// q5.go  * Created on  2020/5/30
-// Copyright (c) 2020 YueTu
-// YueTu TECHNOLOGY CO.,LTD. All Rights Reserved.
-//
-// This software is the confidential and proprietary information of
-// YueTu Ltd. ("Confidential Information").
-// You shall not disclose such Confidential Information and shall use
-// it only in accordance with the terms of the license agreement you
-// entered into with YueTu Ltd.
-
 package leetcode
 
 //给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。
