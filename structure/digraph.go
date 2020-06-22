@@ -230,20 +230,21 @@ type normalSCC struct {
 	g          Digraph
 	components [][]int
 	marked     []bool
-	edgeTo     []int
-	onstack    []bool
 }
 
 func NewNormalSCC(g Digraph) SCC {
 	scc := &normalSCC{
-		g:       g,
-		marked:  make([]bool, g.V()),
-		edgeTo:  make([]int, g.V()),
-		onstack: make([]bool, g.V()),
+		g:      g,
+		marked: make([]bool, g.V()),
 	}
-
-	for v := 0; v < g.V(); v++ {
-		scc.dfs(v)
+	dfo := NewDepthFirstOrder(g.Reverse())
+	for !dfo.reversePost.IsEmpty() {
+		var coms []int
+		v := dfo.reversePost.Pop().(int)
+		scc.dfs(v, &coms)
+		if len(coms) > 0 {
+			scc.components = append(scc.components, coms)
+		}
 	}
 
 	return scc
@@ -266,34 +267,13 @@ func (scc *normalSCC) Id(v int) int {
 	return v
 }
 
-func (scc *normalSCC) dfs(v int) {
+func (scc *normalSCC) dfs(v int, coms *[]int) {
 	scc.marked[v] = true
-	scc.onstack[v] = true
+	*coms = append(*coms, v)
 	for _, w := range scc.g.Adj(v) {
 		current := w.(int)
-		scc.edgeTo[current] = v
 		if !scc.marked[current] {
-			scc.dfs(current)
-		} else if scc.onstack[current] {
-			var coms []int
-			coms = append(coms, current)
-			for x := v; x != current; x = scc.edgeTo[x] {
-				coms = append(coms, x)
-			}
-			scc.merge(coms)
+			scc.dfs(current, coms)
 		}
 	}
-	scc.onstack[v] = false
-}
-
-func (scc *normalSCC) merge(coms []int) {
-	for _, c := range coms {
-		for i, cc := range scc.components {
-			if utils.ContainsInt(cc, c) {
-				scc.components[i] = append(scc.components[i], coms...)
-				return
-			}
-		}
-	}
-	scc.components = append(scc.components, coms)
 }

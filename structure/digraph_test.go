@@ -65,7 +65,7 @@ func TestNewTopologicalSorter(t *testing.T) {
 }
 
 func TestNormalSCC(t *testing.T) {
-	g := NewDiAdjGraph(13, []edge{
+	g := NewDiAdjGraph(7, []edge{
 		{0, 1}, {1, 2}, {2, 0}, {1, 6}, {6, 0}, {2, 3}, {3, 4}, {4, 5}, {5, 3},
 	})
 	scc := NewNormalSCC(g)
