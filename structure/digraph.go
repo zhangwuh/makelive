@@ -1,6 +1,11 @@
 package structure
 
-import "mklive.zhangwuh.com/utils"
+import (
+	"fmt"
+	"math"
+
+	"mklive.zhangwuh.com/utils"
+)
 
 type Digraph interface {
 	Graph
@@ -277,3 +282,176 @@ func (scc *normalSCC) dfs(v int, coms *[]int) {
 		}
 	}
 }
+
+//edge weighted digraph start
+type directedEdge struct {
+	edge
+	weight float32
+}
+
+func NewDirectedEdg(from, to int, weight float32) *directedEdge {
+	return &directedEdge{edge{from, to}, weight}
+}
+
+func (de directedEdge) from() int {
+	return de.edge.v
+}
+
+func (de directedEdge) to() int {
+	return de.edge.w
+}
+
+func (de directedEdge) desc() string {
+	return fmt.Sprintf("directed edge from %d to %d weight:%f", de.from(), de.to(), de.weight)
+}
+
+type EdgeWeightedDigraph interface {
+	V() int                     //vertex amount
+	E() int                     //edge amount
+	AddEdge(edge *directedEdge) //add edge between v1 and v2
+	Adj(v int) []*directedEdge
+	Edges() []*directedEdge
+	Desc() string
+}
+
+type edgeWeightedDigraph struct {
+	v   int
+	e   int
+	adj [][]*directedEdge
+}
+
+func NewEdgeWeightedDigraph(v int) *edgeWeightedDigraph {
+	g := &edgeWeightedDigraph{
+		v: v,
+	}
+
+	g.adj = make([][]*directedEdge, g.V())
+
+	return g
+}
+
+func (ed *edgeWeightedDigraph) V() int {
+	return ed.v
+}
+
+func (ed *edgeWeightedDigraph) E() int {
+	return ed.e
+}
+
+func (ed *edgeWeightedDigraph) AddEdge(e *directedEdge) {
+	ed.adj[e.from()] = append(ed.adj[e.from()], e)
+	ed.e++
+}
+
+func (ed *edgeWeightedDigraph) Adj(v int) []*directedEdge {
+	return ed.adj[v]
+}
+
+func (ed *edgeWeightedDigraph) Edges() []*directedEdge {
+	var es []*directedEdge
+	for _, e := range ed.adj {
+		for _, ee := range e {
+			es = append(es, ee)
+		}
+	}
+	return es
+}
+
+func (ed *edgeWeightedDigraph) Desc() string {
+	return fmt.Sprintf("edgeWeightedDigraph has %d vertex and %d edges", ed.V(), ed.E())
+}
+
+//shortest path calculator from vertex s
+type ShortestPath interface {
+	S() int                   //start vertex
+	DistanceTo(v int) float32 // return maxfloat32 if no path detected
+	HasPathTo(v int) bool
+	PathTo(v int) []*directedEdge
+	Graph() EdgeWeightedDigraph
+}
+
+type shortestPath struct {
+	s       int
+	edgesTo []*directedEdge //detected edges in the shortest path to s
+	distTo  []float32       // detected distance to s
+	g       EdgeWeightedDigraph
+}
+
+func NewShortestPath(s int, graph EdgeWeightedDigraph) ShortestPath {
+	sp := &shortestPath{s: s, g: graph}
+	for i := 0; i < graph.V(); i++ {
+		if i == s {
+			sp.distTo = append(sp.distTo, 0)
+		} else {
+			sp.distTo = append(sp.distTo, math.MaxFloat32)
+		}
+	}
+	sp.edgesTo = make([]*directedEdge, graph.V())
+	sp.searchPath(s)
+	return sp
+}
+
+func (sp *shortestPath) searchPath(s int) {
+	sp.relaxVertex(s)
+	for _, v := range sp.Graph().Adj(s) {
+		sp.searchPath(v.w)
+	}
+}
+
+func (sp *shortestPath) Graph() EdgeWeightedDigraph {
+	return sp.g
+}
+
+func (sp *shortestPath) S() int {
+	return sp.s
+}
+
+func (sp *shortestPath) DistanceTo(v int) float32 {
+	return sp.distTo[v]
+}
+
+func (sp *shortestPath) HasPathTo(v int) bool {
+	return sp.distTo[v] != math.MaxFloat32
+}
+
+func (sp *shortestPath) PathTo(v int) []*directedEdge {
+	stack := NewLinkedStack(nil)
+	for {
+		if v == sp.s {
+			break
+		}
+		if sp.HasPathTo(v) {
+			edge := sp.edgesTo[v]
+			stack.Push(edge)
+			v = edge.from()
+		}
+	}
+	var res []*directedEdge
+	for !stack.IsEmpty() {
+		res = append(res, stack.Pop().(*directedEdge))
+	}
+	return res
+}
+
+func printPath(ds []*directedEdge) {
+	for _, d := range ds {
+		fmt.Println(fmt.Sprintf("%d -> %d", d.v, d.w))
+	}
+}
+
+func (sp *shortestPath) relax(e *directedEdge) {
+	if sp.DistanceTo(e.from())+e.weight < sp.DistanceTo(e.to()) { //do relax
+		fmt.Println(fmt.Sprintf("relax %d to %d", e.v, e.w))
+		sp.distTo[e.to()] = sp.DistanceTo(e.from()) + e.weight
+		sp.edgesTo[e.to()] = e
+	}
+}
+
+func (sp *shortestPath) relaxVertex(v int) {
+	fmt.Println(fmt.Sprintf("relax vertex %d", v))
+	for _, e := range sp.g.Adj(v) {
+		sp.relax(e)
+	}
+}
+
+//edge weighted digraph end

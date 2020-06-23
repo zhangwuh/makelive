@@ -73,3 +73,23 @@ func TestNormalSCC(t *testing.T) {
 	assert.True(t, scc.Connected(3, 5))
 	assert.False(t, scc.Connected(2, 3))
 }
+
+func TestEdgeWeightedDigraph(t *testing.T) {
+	wdg := NewEdgeWeightedDigraph(8)
+	//wdg.AddEdge(NewDirectedEdg(5,1, 0.32))
+	wdg.AddEdge(NewDirectedEdg(0, 2, 0.26))
+	wdg.AddEdge(NewDirectedEdg(7, 3, 0.37))
+	wdg.AddEdge(NewDirectedEdg(0, 4, 0.38))
+	wdg.AddEdge(NewDirectedEdg(4, 5, 0.35))
+	wdg.AddEdge(NewDirectedEdg(4, 6, 1.35))
+	wdg.AddEdge(NewDirectedEdg(3, 6, 0.52))
+	wdg.AddEdge(NewDirectedEdg(2, 7, 0.34))
+
+	s := NewShortestPath(0, wdg)
+	assert.True(t, s.HasPathTo(6))
+	assert.Equal(t, s.DistanceTo(6), float32(1.49))
+
+	printPath(s.PathTo(6))
+
+	assert.False(t, s.HasPathTo(1))
+}

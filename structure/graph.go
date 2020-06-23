@@ -27,7 +27,7 @@ type AdjGraph struct {
 type vertex struct{}
 
 type edge struct {
-	v, w int
+	v, w int // v :edge from, w:edge to
 }
 
 func NewAdjGraph(v int, edges []edge) *AdjGraph {
